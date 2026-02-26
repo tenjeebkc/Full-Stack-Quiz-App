@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");  // helps interact with react
 const mongoose = require("mongoose");
 
+
 const mongoURL = "mongodb+srv://user_tenjeeb:ebNHAY4ErdjAJhSi@sharedcluster.m8sceit.mongodb.net/quizApp?retryWrites=true&w=majority";
 const app = express();
 
