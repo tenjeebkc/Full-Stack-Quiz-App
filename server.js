@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");  // helps interact with react
+const mongoose = require("mongoose");
 
+const mongoURL = "mongodb+srv://user_tenjeeb:ebNHAY4ErdjAJhSi@sharedcluster.m8sceit.mongodb.net/quizApp?retryWrites=true&w=majority";
 const app = express();
 
 app.use(cors());
@@ -8,46 +10,24 @@ app.use(express.json());
 
 const PORT = 3001;
 
+// Connnect to the mongoDB
+mongoose.connect(mongoURL)
+.then(() => console.log("MongoDB connnected"))
+.catch(err => console.log("MongoDb connection error", err)
+)
+
 // Dummy quiz question
-const questions = [
-    {
-        id: 1,
-        question: "What does HTML stand for?",
-        options: [
-            "Hyper Text Markup Language",
-            "Home Tool Markup Language",
-            "Hyperlinks Text Mark Language",
-            "Hyper Tool Multi Language",
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 2,
-        question: "Which language runs in the browser?",
-        options: ["Java", "C", "Python", "JavaScript"],
-        correctAnswer: 3
-    },
+const Question = require("./models/Question");
 
-    {
-        id: 3,
-        question: "What is React?",
-        options: [
-            "Database",
-            "Frontend library",
-            "Operating system",
-            "Programming language"
-        ],
-        correctAnswer: 1
-    }
-
-]
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 // Api route
-app.get('/api/questions', (req, res) => {
-    res.json(questions);
+app.get('/api/questions', async(req, res) => {
+    try{
+        const questions = await Question.find();
+        res.json(questions);
+    } catch(err) {
+        console.error(err);
+        res.status(500).json({error: "Server error"});
+    }
 });
 
 app.listen(PORT, () => {
