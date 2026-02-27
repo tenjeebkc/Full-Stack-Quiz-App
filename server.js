@@ -17,7 +17,7 @@ mongoose.connect(mongoURL)
 .catch(err => console.log("MongoDb connection error", err)
 )
 
-// Dummy quiz question
+
 const Question = require("./models/Question");
 
 // Api route
@@ -28,6 +28,25 @@ app.get('/api/questions', async(req, res) => {
     } catch(err) {
         console.error(err);
         res.status(500).json({error: "Server error"});
+    }
+});
+
+const Result = require("./models/Result")
+
+// Use Post req because we are creating a new Data
+app.post('/api/results', async(req, res) => {
+    try{
+        const { score, total } = req.body;
+
+        // new Result is how you turn raw request data into a properly structured MongoDB document before saving it.
+        const newResult = new Result({ score, total });  
+        await newResult.save();
+
+        res.json({ message: "Result saved successfully" });
+
+    } catch(err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to save result" });
     }
 });
 

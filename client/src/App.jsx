@@ -47,11 +47,35 @@ function App() {
     }
   }
 
+  const saveResult = async() => {
+    try{
+      await fetch("http://localhost:3001/api/results", {
+        method: "POST",
+        // Tells the server the request body is JSON.
+        headers:{
+          "Content-Type": "application/json"
+        },
+        // Convert the json object into json text for server
+        body: JSON.stringify({
+          score: score,
+          total: questions.length
+        })
+      });
+      alert("Result saved!");
+    }catch(err){
+     alert("Error saving result⚠️")
+      console.error("Error saving result:", err)
+    }
+  }
+
   if(showResult){
     return(
       <div style={{padding: "20px" }}>
         <h1>Quiz Finished 🎉</h1>
         <h2>Your score: {score} / {questions.length}</h2>
+        <button onClick={saveResult}>
+          Save Result
+        </button>
       </div>
     )
   }
