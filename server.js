@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3001;
+const PORT = 3000;
 
 // Connnect to the mongoDB
 mongoose.connect(mongoURL)
@@ -20,7 +20,7 @@ mongoose.connect(mongoURL)
 
 const Question = require("./models/Question");
 
-// Api route
+// Api route for questions
 app.get('/api/questions', async(req, res) => {
     try{
         const questions = await Question.find();
@@ -33,7 +33,7 @@ app.get('/api/questions', async(req, res) => {
 
 const Result = require("./models/Result")
 
-// Use Post req because we are creating a new Data
+// Use POST req because we are creating a new Data
 app.post('/api/results', async(req, res) => {
     try{
         const { score, total } = req.body;
@@ -47,6 +47,17 @@ app.post('/api/results', async(req, res) => {
     } catch(err) {
         console.error(err);
         res.status(500).json({ error: "Failed to save result" });
+    }
+});
+
+// GET Results API
+app.get('/api/results', async(req, res) => {
+    try{
+        const results = await Result.find().sort({ createdAt: -1 });  // New data at first
+        res.json(results);
+    } catch(err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch results" });
     }
 });
 

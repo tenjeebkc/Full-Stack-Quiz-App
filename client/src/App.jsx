@@ -10,8 +10,12 @@ function App() {
   const [score, setScore] = useState(0); // correct answer count
   const [showResult, setShowResult] = useState(false);
 
+  const [pastResults, setPastResults] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+
   useEffect(() => {
-    fetch("http://localhost:3001/api/questions")
+    fetch("http://localhost:3000/api/questions")
       .then(res => res.json())
       .then(data => {
         setQuestions(data);
@@ -49,7 +53,7 @@ function App() {
 
   const saveResult = async() => {
     try{
-      await fetch("http://localhost:3001/api/results", {
+      await fetch("http://localhost:3000/api/results", {
         method: "POST",
         // Tells the server the request body is JSON.
         headers:{
@@ -68,7 +72,19 @@ function App() {
     }
   }
 
-  if(showResult){
+  const fetchResult = async() => {
+    try{
+      const res = await fetch("http://localhost:3000/api/results")
+      const data = await res.json();
+      setPastResults(data)
+      setShowHistory(true);
+    }
+    catch(err){
+      console.error("Error fetching results:", err);
+    }
+  }
+
+  if(showResult && !showHistory){
     return(
       <div style={{padding: "20px" }}>
         <h1>Quiz Finished 🎉</h1>
@@ -76,6 +92,27 @@ function App() {
         <button onClick={saveResult}>
           Save Result
         </button>
+        <button onClick={fetchResult} style={{marginLeft: "10px"}}>
+          View Past Results
+          </button>
+      </div>
+    )
+  }
+
+  if(showHistory){
+    return(
+      <div style={{ padding : "20px" }}>
+        <h1>Past Results</h1>
+
+        {pastResults.map((r, index) =>(
+          <div key={index} style={{ marginBottom: "10px" }}>
+            Score: {r.score} / {r.total}
+          </div>
+        ))}
+
+    <button onClick={() => setShowHistory(false)}>
+      Back
+      </button>
       </div>
     )
   }
@@ -102,6 +139,7 @@ function App() {
         disabled = {selectedAnswer === null}
         style={{marginTop: "20px"}}>Next</button>
       </div>
+
   
   )
 }
