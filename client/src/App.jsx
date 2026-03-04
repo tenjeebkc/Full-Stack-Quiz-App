@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
+import "./App.css";
+import { useState, useEffect } from 'react'
 
 import QuestionCard from "./components/QuestionCard"
 import ResultScreen from "./components/ResultScreen"

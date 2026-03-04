@@ -1,6 +1,7 @@
 function HistoryScreen({ pastResults, setShowHistory, clearHistory }) {
     return (
-              <div style={{ padding : "20px" }}>
+              <div className="app-container"
+              style={{ padding : "20px" }}>
         <h1>Past Results</h1>
 
         {pastResults.map((r, index) =>(
@@ -9,10 +10,12 @@ function HistoryScreen({ pastResults, setShowHistory, clearHistory }) {
           </div>
         ))}
 
-    <button onClick={() => setShowHistory(false)}>
+    <button className="primary-btn"
+     onClick={() => setShowHistory(false)}>
       Back
       </button>
-      <button onClick={clearHistory} style={{marginLeft: "20px"}}>Clear History</button>
+      <button className="primary-btn"
+       onClick={clearHistory} style={{marginLeft: "20px"}}>Clear History</button>
       </div>
     )
 }
