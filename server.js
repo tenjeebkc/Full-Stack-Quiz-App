@@ -61,6 +61,17 @@ app.get('/api/results', async(req, res) => {
     }
 });
 
+// DELETE Past results
+app.delete('/api/results', async(req, res) => {
+    try{
+        await Result.deleteMany({});
+        res.json({ message: "All results deleted successfully" });
+    } catch(err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to delete results" });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
