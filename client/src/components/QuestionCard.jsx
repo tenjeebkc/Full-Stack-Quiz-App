@@ -5,14 +5,18 @@ function QuestionCard({
     handleAnswerClick,
     handleNext,
     totalQuestions,
-    progress
+    progress,
+    timeLeft
 }) {
     return (
-        <div className="app-container" style={{ padding: "20px" }}>
+        <div className="app-container" style={{ padding: "20px",
+         }}>
             <h1>Quiz App - Made for you</h1>
 
             {/* Question counter */}
             <h2>Question {currentIndex + 1} / {totalQuestions}</h2>
+            <h3 className="timer">{timeLeft}</h3>
+      
 
             {/* PROGRESS BAR */}
             <div style={{
@@ -36,10 +40,9 @@ function QuestionCard({
             {currentQuestion.options.map((option, index) => (
                 <div key={index}>
                     <button
-                        className="secondary-btn"
+                        className="option-btn"
                         onClick={() => handleAnswerClick(index)}
                         style={{
-                            margin: "5px", fontSize: "16px",
                             backgroundColor: selectedAnswer === index ? "lightgreen" : "white"
                         }}>
                         {option}

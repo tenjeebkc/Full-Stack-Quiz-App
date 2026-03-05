@@ -17,6 +17,8 @@ function App() {
   const [pastResults, setPastResults] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  const [timeLeft, setTimeLeft] = useState(10);
+
   useEffect(() => {
     fetch("http://localhost:3000/api/questions")
       .then(res => res.json())
@@ -29,6 +31,21 @@ function App() {
         setLoading(false);
       })
   }, []);
+
+  // Timer logic
+  useEffect(() => {
+   if(timeLeft === 0) {
+    handleNext();  // Move to next question automatically
+    return;
+   }
+
+   const timer = setTimeout(() =>{
+    setTimeLeft(timeLeft - 1);
+   }, 1000);
+   
+   return () => clearTimeout(timer);   // Clear the old timer
+  }, [timeLeft])
+  
 
   if (loading) return <h2>Loading questions...</h2>
   if (questions.length === 0) return <h2>No questions found!</h2>
@@ -45,6 +62,7 @@ function App() {
     }
 
     setSelectedAnswer(null);
+    setTimeLeft(10);
 
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex(currentIndex + 1)
@@ -141,6 +159,7 @@ function App() {
       handleNext={handleNext}
       totalQuestions={questions.length}
       progress={progress}
+      timeLeft = {timeLeft}
     />
   )
 }
