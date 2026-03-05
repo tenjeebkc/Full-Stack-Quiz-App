@@ -17,7 +17,6 @@ function App() {
   const [pastResults, setPastResults] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
-
   useEffect(() => {
     fetch("http://localhost:3000/api/questions")
       .then(res => res.json())
@@ -108,6 +107,9 @@ function App() {
     }
   };
 
+  // Progress bar
+  const progress = ((currentIndex + 1) / questions.length) * 100;
+
   if (showResult && !showHistory) {
     return (
       <ResultScreen
@@ -126,8 +128,7 @@ function App() {
         pastResults={pastResults}
         setShowHistory={setShowHistory}
         setPastResults = {setPastResults}
-        clearHistory={clearHistory} />
-        
+        clearHistory={clearHistory} />    
     )
   }
 
@@ -138,6 +139,8 @@ function App() {
       selectedAnswer={selectedAnswer}
       handleAnswerClick={handleAnswerClick}
       handleNext={handleNext}
+      totalQuestions={questions.length}
+      progress={progress}
     />
   )
 }
