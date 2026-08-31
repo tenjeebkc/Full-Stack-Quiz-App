@@ -31,7 +31,7 @@ This project demonstrates the development of a full-stack web application with a
 
 * MongoDB
 
-Project Structure
+**4) Project Structure**
 
 Frontend (React)
        ↓
@@ -41,14 +41,14 @@ Node.js + Express
        ↓
     MongoDB
 
-**4) Getting Started**
+**5) Getting Started**
 
 Prerequisites
 
 * Node.js
 * MongoDB
 
-**5) Installation**
+**6) Installation**
 
 Clone the repository and install the dependencies for the frontend and backend.
 
@@ -56,7 +56,7 @@ npm install
 
 Start the backend and frontend using the commands configured in their respective directories.
 
-**6) Project Status**
+**7) Project Status**
 
 Completed
 
