@@ -1,62 +1,78 @@
 function QuestionCard({
-    currentQuestion,
-    currentIndex,
-    selectedAnswer,
-    handleAnswerClick,
-    handleNext,
-    totalQuestions,
-    progress,
-    timeLeft
+  currentQuestion,
+  currentIndex,
+  selectedAnswer,
+  handleAnswerClick,
+  handleNext,
+  totalQuestions,
+  progress,
+  timeLeft,
 }) {
-    return (
-        <div className="app-container" style={{ padding: "20px",
-         }}>
-            <h1>Quiz App - Made for you</h1>
-
-            {/* Question counter */}
-            <h2>Question {currentIndex + 1} / {totalQuestions}</h2>
-            <h3 className="timer">{timeLeft}</h3>
-      
-
-            {/* PROGRESS BAR */}
-            <div style={{
-                width: "100%",
-                height: "10px",
-                background: "#e5e7eb",
-                borderRadius: "5px",
-                marginBUtton: "20px"
-            }}>
-                <div style={{
-                    width: `${progress}%`,
-                    height: "100%",
-                    background: "#667eea",
-                    borderRadius: "5px",
-                    transition: "width 0.3s ease"
-                }}></div>
-             </div>
-
-            <h3>{currentQuestion.question}</h3>
-
-            {currentQuestion.options.map((option, index) => (
-                <div key={index}>
-                    <button
-                        className="option-btn"
-                        onClick={() => handleAnswerClick(index)}
-                        style={{
-                            backgroundColor: selectedAnswer === index ? "lightgreen" : "white"
-                        }}>
-                        {option}
-                    </button>
-                </div>
-            ))}
-
-            <button
-                className="primary-btn"
-                onClick={handleNext}
-                disabled={selectedAnswer === null}
-                style={{ marginTop: "20px" }}>Next</button>
+  return (
+    <div className="app-container">
+      <div className="quiz-header">
+        <div>
+          <p className="quiz-label">QUIZIZ</p>
+          <h1>Test Your Knowledge</h1>
         </div>
-    )
+
+        <div className="question-count">
+          {currentIndex + 1} / {totalQuestions}
+        </div>
+      </div>
+
+      <div className="progress-container">
+        <div
+          className="progress-bar"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className="question-section">
+        <div className="timer">
+          Time left: {timeLeft}s
+        </div>
+
+        <h2>{currentQuestion.question}</h2>
+      </div>
+
+      <div className="options-container">
+        {currentQuestion.options.map((option, index) => (
+          <button
+            key={index}
+            className={`option-btn ${
+              selectedAnswer === index ? "selected" : ""
+            }`}
+            onClick={() => handleAnswerClick(index)}
+          >
+            <span className="option-letter">
+              {String.fromCharCode(65 + index)}
+            </span>
+
+            <span>{option}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="quiz-footer">
+        <span>
+          {selectedAnswer === null
+            ? "Select an answer"
+            : "Answer selected"}
+        </span>
+
+        <button
+          className="primary-btn"
+          onClick={handleNext}
+          disabled={selectedAnswer === null}
+        >
+          {currentIndex + 1 === totalQuestions
+            ? "Finish Quiz"
+            : "Next Question"}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default QuestionCard;

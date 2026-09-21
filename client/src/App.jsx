@@ -1,132 +1,184 @@
 import "./App.css";
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-import QuestionCard from "./components/QuestionCard"
-import ResultScreen from "./components/ResultScreen"
-import HistoryScreen from "./components/HistoryScreen"
+import QuestionCard from "./components/QuestionCard";
+import ResultScreen from "./components/ResultScreen";
+import HistoryScreen from "./components/HistoryScreen";
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function App() {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [currentIndex, setCurrentIndex] = useState(0);  //Which question to show
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [score, setScore] = useState(0); // correct answer count
+  const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
   const [pastResults, setPastResults] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(15);
 
+  // Fetch questions
   useEffect(() => {
-    fetch("http://localhost:3000/api/questions")
-      .then(res => res.json())
-      .then(data => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(`${API_URL}/api/questions`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch questions");
+        }
+
+        const data = await response.json();
+
         setQuestions(data);
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+        setError("Unable to load questions. Please try again.");
+      } finally {
         setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        setLoading(false);
-      })
+      }
+    };
+
+    fetchQuestions();
   }, []);
 
-  // Timer logic
+  // Timer
   useEffect(() => {
-   if(timeLeft === 0) {
-    handleNext();  // Move to next question automatically
-    return;
-   }
+    if (loading || showResult || showHistory || questions.length === 0) {
+      return;
+    }
 
-   const timer = setTimeout(() =>{
-    setTimeLeft(timeLeft - 1);
-   }, 1000);
-   
-   return () => clearTimeout(timer);   // Clear the old timer
-  }, [timeLeft])
-  
+    if (timeLeft <= 0) {
+      moveToNextQuestion();
+      return;
+    }
 
-  if (loading) return <h2>Loading questions...</h2>
-  if (questions.length === 0) return <h2>No questions found!</h2>
+    const timer = setTimeout(() => {
+      setTimeLeft((previousTime) => previousTime - 1);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft, loading, showResult, showHistory]);
 
   const currentQuestion = questions[currentIndex];
 
   const handleAnswerClick = (index) => {
     setSelectedAnswer(index);
-  }
+  };
 
-  const handleNext = () => {
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-      setScore(score + 1)
-    }
+  const moveToNextQuestion = () => {
+    const isCorrect =
+      selectedAnswer !== null &&
+      selectedAnswer === currentQuestion.correctAnswer;
 
+    const newScore = isCorrect ? score + 1 : score;
+
+    setScore(newScore);
     setSelectedAnswer(null);
-    setTimeLeft(10);
+    setTimeLeft(15);
 
     if (currentIndex + 1 < questions.length) {
-      setCurrentIndex(currentIndex + 1)
+      setCurrentIndex((previousIndex) => previousIndex + 1);
+    } else {
+      setShowResult(true);
     }
-    else {
-      setShowResult(true)
-    }
-  }
+  };
 
   const saveResult = async () => {
     try {
-      await fetch("http://localhost:3000/api/results", {
+      const response = await fetch(`${API_URL}/api/results`, {
         method: "POST",
-        // Tells the server the request body is JSON.
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        // Convert the json object into json text for server
         body: JSON.stringify({
-          score: score,
-          total: questions.length
-        })
+          score,
+          total: questions.length,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to save result");
+      }
+
       alert("Result saved!");
     } catch (err) {
-      alert("Error saving result⚠️")
-      console.error("Error saving result:", err)
+      console.error("Error saving result:", err);
+      alert("Error saving result ⚠️");
     }
-  }
+  };
 
   const fetchResult = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/results")
-      const data = await res.json();
-      setPastResults(data)
+      const response = await fetch(`${API_URL}/api/results`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch results");
+      }
+
+      const data = await response.json();
+
+      setPastResults(data);
       setShowHistory(true);
-    }
-    catch (err) {
+    } catch (err) {
       console.error("Error fetching results:", err);
     }
-  }
+  };
 
   const restartQuiz = () => {
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setScore(0);
+    setTimeLeft(10);
     setShowResult(false);
     setShowHistory(false);
   };
 
-  const clearHistory = async () =>{
-    try{
-      await fetch("http://localhost:3000/api/results", {
+  const clearHistory = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/results`, {
         method: "DELETE",
       });
 
+      if (!response.ok) {
+        throw new Error("Failed to clear history");
+      }
+
       setPastResults([]);
-    } catch(err){
+    } catch (err) {
       console.error("Error clearing history:", err);
     }
   };
 
-  // Progress bar
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  if (loading) {
+    return <h2>Loading questions...</h2>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h2>{error}</h2>
+        <button onClick={() => window.location.reload()}>
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return <h2>No questions found!</h2>;
+  }
+
+  const progress =
+    ((currentIndex + 1) / questions.length) * 100;
 
   if (showResult && !showHistory) {
     return (
@@ -135,9 +187,9 @@ function App() {
         total={questions.length}
         saveResult={saveResult}
         fetchResult={fetchResult}
-       restartQuiz={restartQuiz}
+        restartQuiz={restartQuiz}
       />
-    )
+    );
   }
 
   if (showHistory) {
@@ -145,9 +197,10 @@ function App() {
       <HistoryScreen
         pastResults={pastResults}
         setShowHistory={setShowHistory}
-        setPastResults = {setPastResults}
-        clearHistory={clearHistory} />    
-    )
+        setPastResults={setPastResults}
+        clearHistory={clearHistory}
+      />
+    );
   }
 
   return (
@@ -156,12 +209,12 @@ function App() {
       currentIndex={currentIndex}
       selectedAnswer={selectedAnswer}
       handleAnswerClick={handleAnswerClick}
-      handleNext={handleNext}
+      handleNext={moveToNextQuestion}
       totalQuestions={questions.length}
       progress={progress}
-      timeLeft = {timeLeft}
+      timeLeft={timeLeft}
     />
-  )
+  );
 }
 
-export default App
+export default App;
