@@ -36,13 +36,13 @@ A full-stack quiz application built with React, Node.js, Express, and MongoDB.
 
 3. Environment Variables
 
-* Create .env files for the client and server.
+  Create .env files for the client and server.
 
-* Client: VITE_API_URL=http://localhost:3000
+  Client: VITE_API_URL=http://localhost:3000
 
-* Server: MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
-PORT=3000
-CLIENT_URL=http://localhost:5173
+  Server: MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
+  PORT=3000
+  CLIENT_URL=http://localhost:5173
 
 4. Start the application
 
