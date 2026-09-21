@@ -24,27 +24,23 @@ A full-stack quiz application built with React, Node.js, Express, and MongoDB.
 
 1. Clone the repository
 
-git clone YOUR_REPOSITORY_URL
-cd Full-Stack-Quiz-App
+* git clone YOUR_REPOSITORY_URL
+* cd Full-Stack-Quiz-App
 
 2. Install dependencies
 
-cd client
-npm install
-cd ../server
-npm install
+* cd client
+* npm install
+* cd ../server
+* npm install
 
 3. Environment Variables
 
-Create .env files for the client and server.
+* Create .env files for the client and server.
 
-Client:
+* Client: VITE_API_URL=http://localhost:3000
 
-VITE_API_URL=http://localhost:3000
-
-Server:
-
-MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
+* Server: MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
 PORT=3000
 CLIENT_URL=http://localhost:5173
 
@@ -52,14 +48,14 @@ CLIENT_URL=http://localhost:5173
 
 Start the backend:
 
-cd server
-node server.js
+* cd server
+* node server.js
 
 Start the frontend in another terminal:
 
-cd client
-npm run dev
+* cd client
+* npm run dev
 
 Open the local URL provided by Vite.
 
-Keep .env files private and never commit database credentials to GitHub.
+* Keep .env files private and never commit database credentials to GitHub.
