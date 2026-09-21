@@ -1,52 +1,65 @@
-**Full-Stack Quiz App**
+# Full-Stack Quiz App
 
 A full-stack quiz application built with React, Node.js, Express, and MongoDB.
 
-⸻
+# Features
 
-**1) Overview**
+* Timed multiple-choice quizzes
+* Randomized questions
+* Score calculation
+* Save quiz results
+* View quiz history
+* Clear quiz history
+* REST API
+* Input validation and error handling
 
-This project is a full-stack web application that combines a React frontend with a Node.js/Express backend and MongoDB for data storage.
+# Tech Stack
 
-**2) Features**
-
-* ✅ Interactive quiz interface
-* ✅ Backend API for application data
-* ✅ MongoDB database integration
-
-**3) Tech Stack**
-
-* Frontend: React, JavaScript, CSS
+* Frontend: React, JavaScript, Vite, CSS
 * Backend: Node.js, Express.js
-* Database: MongoDB
+* Database: MongoDB Atlas
+* ODM: Mongoose
 
-**4) Project Structure**
+# Run Locally
 
-Frontend (React)
-       ↓
-   REST API
-       ↓
-Node.js + Express
-       ↓
-    MongoDB
+1. Clone the repository
 
-**5) Getting Started**
+git clone YOUR_REPOSITORY_URL
+cd Full-Stack-Quiz-App
 
-Prerequisites
+2. Install dependencies
 
-* Node.js
-* MongoDB
-
-**6) Installation**
-
-Clone the repository and install the dependencies for the frontend and backend.
-
+cd client
+npm install
+cd ../server
 npm install
 
-Start the application using the project's configured development commands.
+3. Environment Variables
 
-**7) Project Status**
+Create .env files for the client and server.
 
-Completed
+Client:
 
-This project demonstrates practical full-stack development using a React frontend, Express backend, and MongoDB database.
+VITE_API_URL=http://localhost:3000
+
+Server:
+
+MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
+PORT=3000
+CLIENT_URL=http://localhost:5173
+
+4. Start the application
+
+Start the backend:
+
+cd server
+node server.js
+
+Start the frontend in another terminal:
+
+cd client
+npm run dev
+
+Open the local URL provided by Vite.
+
+Keep .env files private and never commit database credentials to GitHub.
